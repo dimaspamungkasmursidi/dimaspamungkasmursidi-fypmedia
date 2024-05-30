@@ -32,8 +32,6 @@ const articles = [
 ];
 
 const Blog = () => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
-
   return (
     <section className="py-8 px-6 max-w-screen-lg mx-auto mb-8">
       <div className="flex justify-center items-center">
@@ -41,40 +39,45 @@ const Blog = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article, index) => (
-          <motion.div
-            key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            ref={ref}
-          >
-            <img
-              src={article.image}
-              alt={article.title}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <a href={article.link} className="hover:underline">
-                <h2 className="text-xl font-bold mb-2 line-clamp-2">
-                  {article.title}
-                </h2>
-              </a>
-              <p className="text-gray-700 mb-4 line-clamp-5">{article.desc}</p>
-              <div className="flex justify-between items-center">
-                <p className="text-gray-500 text-sm">{article.date}</p>
-                <div className="h-6 flex items-center justify-center">
-                  <a href={article.link} className="flex items-center">
-                    <p className="text-blue-500 text-sm">Selengkapnya</p>
-                    <IoIosArrowRoundForward className="w-6 h-6 text-blue-500" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <InViewCard key={index} article={article} delay={index * 0.1} />
         ))}
       </div>
     </section>
+  );
+};
+
+const InViewCard = ({ article, delay }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white rounded-lg shadow-md overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay }}
+    >
+      <img
+        src={article.image}
+        alt={article.title}
+        className="w-full h-48 object-cover"
+      />
+      <div className="p-4">
+        <a href={article.link} className="hover:underline">
+          <h2 className="text-xl font-bold mb-2 line-clamp-2">{article.title}</h2>
+        </a>
+        <p className="text-gray-700 mb-4 line-clamp-5">{article.desc}</p>
+        <div className="flex justify-between items-center">
+          <p className="text-gray-500 text-sm">{article.date}</p>
+          <div className="h-6 flex items-center justify-center">
+            <a href={article.link} className="flex items-center">
+              <p className="text-blue-500 text-sm">Selengkapnya</p>
+              <IoIosArrowRoundForward className="w-6 h-6 text-blue-500" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
